@@ -2,6 +2,7 @@ import json
 import logging
 import time
 
+import matplotlib.pyplot as plt
 import pandas as pd
 
 start_time = time.time()
@@ -30,12 +31,19 @@ logger.debug('input file: %s' % input_file)
 full_input_file = input_folder + input_file
 logger.debug('reading input data from %s' % full_input_file)
 
-default_head = 5
-column_names = ['foo', 'bar', 'baz', 'qux', 'name']
+column_names = ['sepal length', 'sepal width', 'petal length', 'petal width', 'name']
 data = pd.read_csv(full_input_file, header=None, names=column_names)
 
+default_head = 5
 logger.debug(data.head(default_head))
 logger.debug(data.describe())
+
+data.hist()
+output_folder = settings['output_folder']
+output_file = settings['output_file']
+full_output_file = output_folder + output_file
+logger.debug('writing histogram to %s' % full_output_file)
+plt.savefig(full_output_file)
 
 logger.debug('done')
 finish_time = time.time()
