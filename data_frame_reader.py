@@ -30,9 +30,13 @@ logger.debug('input file: %s' % input_file)
 full_input_file = input_folder + input_file
 logger.debug('reading input data from %s' % full_input_file)
 
-data = pd.read_csv(full_input_file)
+default_head = 5
+column_names = ['foo', 'bar', 'baz', 'qux', 'name']
+data = pd.read_csv(full_input_file, header=None, names=column_names)
 
-logger.debug(data.head(10))
+logger.debug(data.head(default_head))
+logger.debug(data.describe())
+
 logger.debug('done')
 finish_time = time.time()
 elapsed_hours, elapsed_remainder = divmod(finish_time - start_time, 3600)
