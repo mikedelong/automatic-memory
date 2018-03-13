@@ -2,6 +2,8 @@ import json
 import logging
 import time
 
+import pandas as pd
+
 start_time = time.time()
 
 formatter = logging.Formatter('%(asctime)s : %(name)s :: %(levelname)s : %(message)s')
@@ -20,7 +22,17 @@ with open(settings_file, 'r') as settings_fp:
     settings = json.load(settings_fp)
 
 logger.debug('settings: %s' % settings)
+# now let's load the big input file
+input_folder = settings['input_folder']
+logger.debug('input folder: %s' % input_folder)
+input_file = settings['input_file']
+logger.debug('input file: %s' % input_file)
+full_input_file = input_folder + input_file
+logger.debug('reading input data from %s' % full_input_file)
 
+data = pd.read_csv(full_input_file)
+
+logger.debug(data.head(10))
 logger.debug('done')
 finish_time = time.time()
 elapsed_hours, elapsed_remainder = divmod(finish_time - start_time, 3600)
