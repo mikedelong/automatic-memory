@@ -33,11 +33,7 @@ logger.debug('reading input data from %s' % full_input_file)
 
 column_names = settings['input_columns']
 logger.debug('we are using column names: %s' % column_names)
-# todo make this a one-liner
-if 'separator' in settings.keys():
-    separator = settings['separator']
-else:
-    separator = ','
+separator = settings['separator'] if 'separator' in settings.keys() else ','
 data = pd.read_csv(full_input_file, header=None, names=column_names, sep=separator)
 logger.debug(data.shape)
 default_head = 5
