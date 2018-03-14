@@ -17,7 +17,7 @@ console_handler.setLevel(logging.DEBUG)
 logger.debug('started')
 
 # read the input filename from a JSON file
-settings_file = './investigate.json'
+settings_file = './settings.json'
 logger.debug('settings file : %s' % settings_file)
 with open(settings_file, 'r') as settings_fp:
     settings = json.load(settings_fp)
@@ -31,9 +31,15 @@ logger.debug('input file: %s' % input_file)
 full_input_file = input_folder + input_file
 logger.debug('reading input data from %s' % full_input_file)
 
-column_names = ['sepal length', 'sepal width', 'petal length', 'petal width', 'name']
-data = pd.read_csv(full_input_file, header=None, names=column_names)
-
+column_names = settings['input_columns']
+logger.debug('we are using column names: %s' % column_names)
+# todo make this a one-liner
+if 'separator' in settings.keys():
+    separator = settings['separator']
+else:
+    separator = ','
+data = pd.read_csv(full_input_file, header=None, names=column_names, sep=separator)
+logger.debug(data.shape)
 default_head = 5
 logger.debug(data.head(default_head))
 logger.debug(data.describe())
