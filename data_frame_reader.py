@@ -37,14 +37,14 @@ separator = settings['separator'] if 'separator' in settings.keys() else ','
 data = pd.read_csv(full_input_file, header=None, names=column_names, sep=separator)
 logger.debug(data.shape)
 default_head = 5
-logger.debug(data.head(default_head))
-logger.debug(data.describe())
+logger.debug('data head: \n%s' % str(data.head(default_head)))
+logger.debug('data describe: \n%s' % str(data.describe()))
+logger.debug('correlations: \n%s' % str(data.corr()))
 
-logger.debug(data.corr())
+output_folder = settings['output_folder']
 
 # draw the histogram(s)
 data.hist()
-output_folder = settings['output_folder']
 histogram_output_file = settings['histogram_output_file']
 full_histogram_output_file = output_folder + histogram_output_file
 logger.debug('writing histogram to %s' % full_histogram_output_file)
