@@ -40,12 +40,27 @@ default_head = 5
 logger.debug(data.head(default_head))
 logger.debug(data.describe())
 
+logger.debug(data.corr())
+
+# draw the histogram(s)
 data.hist()
 output_folder = settings['output_folder']
-output_file = settings['output_file']
-full_output_file = output_folder + output_file
-logger.debug('writing histogram to %s' % full_output_file)
-plt.savefig(full_output_file)
+histogram_output_file = settings['histogram_output_file']
+full_histogram_output_file = output_folder + histogram_output_file
+logger.debug('writing histogram to %s' % full_histogram_output_file)
+plt.savefig(full_histogram_output_file)
+
+# clear the current figure
+plt.clf()
+
+# plot correlation matrix
+plt.imshow(data.corr())
+plt.colorbar()
+correlations_output_file = settings['correlations_output_file']
+full_correlations_output_file = output_folder + correlations_output_file
+logger.debug('writing correlations to %s' % full_correlations_output_file)
+plt.savefig(full_correlations_output_file)
+
 
 logger.debug('done')
 finish_time = time.time()
