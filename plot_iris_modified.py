@@ -40,41 +40,40 @@ from sklearn import svm, datasets
 print(__doc__)
 
 
-def make_meshgrid(x, y, h=.02):
+def make_meshgrid(arg_x, arg_y, h=.02):
     """Create a mesh of points to plot in
 
     Parameters
     ----------
-    x: data to base x-axis meshgrid on
-    y: data to base y-axis meshgrid on
+    arg_x: data to base x-axis meshgrid on
+    arg_y: data to base y-axis meshgrid on
     h: stepsize for meshgrid, optional
 
     Returns
     -------
-    xx, yy : ndarray
+    result_xx, result_yy : ndarray
     """
-    x_min, x_max = x.min() - 1, x.max() + 1
-    y_min, y_max = y.min() - 1, y.max() + 1
-    xx, yy = np.meshgrid(np.arange(x_min, x_max, h),
-                         np.arange(y_min, y_max, h))
-    return xx, yy
+    x_min, x_max = arg_x.min() - 1, arg_x.max() + 1
+    y_min, y_max = arg_y.min() - 1, arg_y.max() + 1
+    result_xx, result_yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+    return result_xx, result_yy
 
 
-def plot_contours(ax, clf, xx, yy, **params):
+def plot_contours(arg_axis, clf, arg_xx, arg_yy, **params):
     """Plot the decision boundaries for a classifier.
 
     Parameters
     ----------
-    ax: matplotlib axes object
+    arg_axis: matplotlib axes object
     clf: a classifier
-    xx: meshgrid ndarray
-    yy: meshgrid ndarray
+    arg_xx: meshgrid ndarray
+    arg_yy: meshgrid ndarray
     params: dictionary of params to pass to contourf, optional
     """
-    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
-    Z = Z.reshape(xx.shape)
-    out = ax.contourf(xx, yy, Z, **params)
-    return out
+    local_z = clf.predict(np.c_[arg_xx.ravel(), arg_yy.ravel()])
+    local_z = local_z.reshape(arg_xx.shape)
+    result = arg_axis.contourf(arg_xx, arg_yy, local_z, **params)
+    return result
 
 
 # import some data to play with
@@ -87,16 +86,12 @@ for feature in ['sepal', 'petal']:
     # we create an instance of SVM and fit out data. We do not scale our
     # data since we want to plot the support vectors
     C = 1.0  # SVM regularization parameter
-    models = (svm.SVC(kernel='linear', C=C),
-              svm.LinearSVC(C=C),
-              svm.SVC(kernel='rbf', gamma=0.7, C=C),
+    models = (svm.SVC(kernel='linear', C=C), svm.LinearSVC(C=C), svm.SVC(kernel='rbf', gamma=0.7, C=C),
               svm.SVC(kernel='poly', degree=3, C=C))
     models = (clf.fit(X, y) for clf in models)
 
     # title for the plots
-    titles = ('SVC with linear kernel',
-              'LinearSVC (linear kernel)',
-              'SVC with RBF kernel',
+    titles = ('SVC with linear kernel', 'LinearSVC (linear kernel)', 'SVC with RBF kernel',
               'SVC with polynomial (degree 3) kernel')
 
     # Set-up 2x2 grid for plotting.
