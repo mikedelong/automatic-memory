@@ -33,11 +33,11 @@ kernel and its parameters.
    more realistic high-dimensional problems.
 
 """
-print(__doc__)
-
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import svm, datasets
+
+print(__doc__)
 
 
 def make_meshgrid(x, y, h=.02):
@@ -80,44 +80,53 @@ def plot_contours(ax, clf, xx, yy, **params):
 # import some data to play with
 iris = datasets.load_iris()
 # Take the first two features. We could avoid this by using a two-dim dataset
-X = iris.data[:, :2]
 y = iris.target
+for feature in ['sepal', 'petal']:
+    X = iris.data[:, 0:2] if feature == 'sepal' else iris.data[:, 2:4]
 
-# we create an instance of SVM and fit out data. We do not scale our
-# data since we want to plot the support vectors
-C = 1.0  # SVM regularization parameter
-models = (svm.SVC(kernel='linear', C=C),
-          svm.LinearSVC(C=C),
-          svm.SVC(kernel='rbf', gamma=0.7, C=C),
-          svm.SVC(kernel='poly', degree=3, C=C))
-models = (clf.fit(X, y) for clf in models)
+    # we create an instance of SVM and fit out data. We do not scale our
+    # data since we want to plot the support vectors
+    C = 1.0  # SVM regularization parameter
+    models = (svm.SVC(kernel='linear', C=C),
+              svm.LinearSVC(C=C),
+              svm.SVC(kernel='rbf', gamma=0.7, C=C),
+              svm.SVC(kernel='poly', degree=3, C=C))
+    models = (clf.fit(X, y) for clf in models)
 
-# title for the plots
-titles = ('SVC with linear kernel',
-          'LinearSVC (linear kernel)',
-          'SVC with RBF kernel',
-          'SVC with polynomial (degree 3) kernel')
+    # title for the plots
+    titles = ('SVC with linear kernel',
+              'LinearSVC (linear kernel)',
+              'SVC with RBF kernel',
+              'SVC with polynomial (degree 3) kernel')
 
-# Set-up 2x2 grid for plotting.
-fig, sub = plt.subplots(2, 2)
-plt.subplots_adjust(wspace=0.4, hspace=0.4)
+    # Set-up 2x2 grid for plotting.
+    fig, sub = plt.subplots(2, 2)
+    plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
-X0, X1 = X[:, 0], X[:, 1]
-xx, yy = make_meshgrid(X0, X1)
+    X0, X1 = X[:, 0], X[:, 1]
+    xx, yy = make_meshgrid(X0, X1)
 
-cmap = plt.get_cmap('coolwarm')
-for clf, title, ax in zip(models, titles, sub.flatten()):
-    plot_contours(ax, clf, xx, yy, cmap=cmap, alpha=0.8)
-    ax.scatter(X0, X1, c=y, cmap=cmap, s=20, edgecolors='k')
-    ax.set_xlim(xx.min(), xx.max())
-    ax.set_ylim(yy.min(), yy.max())
-    ax.set_xlabel('Sepal length')
-    ax.set_ylabel('Sepal width')
-    ax.set_xticks(())
-    ax.set_yticks(())
-    ax.set_title(title)
+    cmap = plt.get_cmap('coolwarm')
+    for clf, title, ax in zip(models, titles, sub.flatten()):
+        plot_contours(ax, clf, xx, yy, cmap=cmap, alpha=0.8)
+        ax.scatter(X0, X1, c=y, cmap=cmap, s=20, edgecolors='k')
+        ax.set_xlim(xx.min(), xx.max())
+        ax.set_ylim(yy.min(), yy.max())
+        if feature == 'sepal':
+            ax.set_xlabel('Sepal length')
+            ax.set_ylabel('Sepal width')
+        else:
+            ax.set_xlabel('Petal length')
+            ax.set_ylabel('Petal width')
 
-output_folder = './output/'
-output_file = 'iris_sepal_svc_plots.png'
-long_output_filename = output_folder + output_file
-plt.savefig(long_output_filename)
+        ax.set_xticks(())
+        ax.set_yticks(())
+        ax.set_title(title)
+
+    output_folder = './output/'
+    if feature == 'sepal':
+        output_file = 'iris_sepal_svc_plots.png'
+    else:
+        output_file = 'iris_petal_svc_plots.png'
+    long_output_filename = output_folder + output_file
+    plt.savefig(long_output_filename)
