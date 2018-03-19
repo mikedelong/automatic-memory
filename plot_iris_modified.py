@@ -105,7 +105,7 @@ plt.subplots_adjust(wspace=0.4, hspace=0.4)
 X0, X1 = X[:, 0], X[:, 1]
 xx, yy = make_meshgrid(X0, X1)
 
-cmap = plt.cm.coolwarm
+cmap = plt.get_cmap('coolwarm')
 for clf, title, ax in zip(models, titles, sub.flatten()):
     plot_contours(ax, clf, xx, yy, cmap=cmap, alpha=0.8)
     ax.scatter(X0, X1, c=y, cmap=cmap, s=20, edgecolors='k')
