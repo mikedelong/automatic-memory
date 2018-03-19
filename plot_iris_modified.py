@@ -88,9 +88,22 @@ if not isdir(output_folder):
 iris = datasets.load_iris()
 # Take the first two features. We could avoid this by using a two-dim dataset
 y = iris.target
+run_data = {
+    'sepal': {
+        'data': iris.data[:, 0:2],
+        'x_label': 'Sepal length',
+        'y_label': 'Sepal width',
+        'output_file': 'iris_sepal_svc_plots.png'
+    },
+    'petal': {
+        'data': iris.data[:, 2:4],
+        'x_label': 'Petal length',
+        'y_label': 'Petal width',
+        'output_file': 'iris_petal_svc_plots.png'
+    }
+}
 for feature in ['sepal', 'petal']:
-    X = iris.data[:, 0:2] if feature == 'sepal' else iris.data[:, 2:4]
-
+    X = run_data[feature]['data']
     # we create an instance of SVM and fit out data. We do not scale our
     # data since we want to plot the support vectors
     C = 1.0  # SVM regularization parameter
@@ -115,20 +128,12 @@ for feature in ['sepal', 'petal']:
         ax.scatter(X0, X1, c=y, cmap=cmap, s=20, edgecolors='k')
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
-        if feature == 'sepal':
-            ax.set_xlabel('Sepal length')
-            ax.set_ylabel('Sepal width')
-        else:
-            ax.set_xlabel('Petal length')
-            ax.set_ylabel('Petal width')
-
+        ax.set_xlabel(run_data[feature]['x_label'])
+        ax.set_ylabel(run_data[feature]['y_label'])
         ax.set_xticks(())
         ax.set_yticks(())
         ax.set_title(title)
 
-    if feature == 'sepal':
-        output_file = 'iris_sepal_svc_plots.png'
-    else:
-        output_file = 'iris_petal_svc_plots.png'
+    output_file = run_data[feature]['output_file']
     long_output_filename = output_folder + output_file
     plt.savefig(long_output_filename)
