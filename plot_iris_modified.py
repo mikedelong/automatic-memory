@@ -117,6 +117,6 @@ for clf, title, ax in zip(models, titles, sub.flatten()):
     ax.set_title(title)
 
 output_folder = './output/'
-output_file = 'iris_svc_plots.png'
+output_file = 'iris_sepal_svc_plots.png'
 long_output_filename = output_folder + output_file
 plt.savefig(long_output_filename)
