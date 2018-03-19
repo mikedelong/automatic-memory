@@ -33,6 +33,8 @@ kernel and its parameters.
    more realistic high-dimensional problems.
 
 """
+from os.path import isdir
+
 import matplotlib.pyplot as plt
 import numpy as np
 from sklearn import svm, datasets
@@ -76,6 +78,12 @@ def plot_contours(arg_axis, clf, arg_xx, arg_yy, **params):
     return result
 
 
+# quit early if the output folder doesn't exist
+output_folder = './output/'
+if not isdir(output_folder):
+    print('Output folder ' + output_folder + ' does not exist. Quitting.')
+    quit()
+
 # import some data to play with
 iris = datasets.load_iris()
 # Take the first two features. We could avoid this by using a two-dim dataset
@@ -118,7 +126,6 @@ for feature in ['sepal', 'petal']:
         ax.set_yticks(())
         ax.set_title(title)
 
-    output_folder = './output/'
     if feature == 'sepal':
         output_file = 'iris_sepal_svc_plots.png'
     else:
