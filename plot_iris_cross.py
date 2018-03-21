@@ -50,7 +50,6 @@ if not isdir(output_folder):
 else:
     print('output folder is %s' % output_folder)
 
-
 g = pd.read_csv('./data/synthetic_iris_with_labels.csv')
 iris_values = g[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
                  'petal width (cm)']].values.astype(np.float32).tolist()
@@ -59,8 +58,6 @@ y = g[['target']].values.astype(int).ravel()
 
 iris = datasets.load_iris()
 y_test = iris.target
-
-
 
 run_data = {
     'sepal': {
@@ -103,14 +100,13 @@ for feature in ['sepal', 'petal']:
     fig, sub = plt.subplots(2, 2)
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
-    # X0, X1 = X[:, 0], X[:, 1]
     X0, X1 = X_test[:, 0], X_test[:, 1]
     xx, yy = make_meshgrid(X0, X1)
 
-    cmap = plt.get_cmap('coolwarm')
+    color_map = plt.get_cmap('coolwarm')
     for clf, title, ax in zip(fitted, titles, sub.flatten()):
-        plot_contours(ax, clf, xx, yy, cmap=cmap, alpha=0.8)
-        ax.scatter(X0, X1, c=y_test, cmap=cmap, s=20, edgecolors='k')
+        plot_contours(ax, clf, xx, yy, cmap=color_map, alpha=0.8)
+        ax.scatter(X0, X1, c=y_test, cmap=color_map, s=20, edgecolors='k')
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
         ax.set_xlabel(run_data[feature]['x_label'])
