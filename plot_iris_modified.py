@@ -102,13 +102,16 @@ run_data = {
         'output_file': 'iris_petal_svc_plots.png'
     }
 }
+random_state = 1
 for feature in ['sepal', 'petal']:
     X = run_data[feature]['data']
     # we create an instance of SVM and fit out data. We do not scale our
     # data since we want to plot the support vectors
     C = 1.0  # SVM regularization parameter
-    models = (svm.SVC(kernel='linear', C=C), svm.LinearSVC(C=C), svm.SVC(kernel='rbf', gamma=0.7, C=C),
-              svm.SVC(kernel='poly', degree=3, C=C))
+    models = (svm.SVC(kernel='linear', C=C, random_state=random_state),
+              svm.LinearSVC(C=C, random_state=random_state),
+              svm.SVC(kernel='rbf', gamma=0.7, C=C, random_state=random_state),
+              svm.SVC(kernel='poly', degree=3, C=C, random_state=random_state))
     models = (clf.fit(X, y) for clf in models)
 
     # title for the plots
