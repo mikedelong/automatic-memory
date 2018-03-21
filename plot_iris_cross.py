@@ -91,10 +91,8 @@ for feature in ['sepal', 'petal']:
     scores = [clf.score(X_test, y_test) for clf in models]
 
     # title for the plots
-    titles = ('SVC with linear kernel {0:.2f}'.format(scores[0]),
-              'LinearSVC (linear kernel) {0:.2f}'.format(scores[1]),
-              'SVC with RBF kernel {0:.2f}'.format(scores[2]),
-              'SVC with cubic kernel {0:.2f}'.format(scores[3]))
+    titles = ('SVC with linear kernel {0:.2f}'.format(scores[0]), 'LinearSVC (linear kernel) {0:.2f}'.format(scores[1]),
+              'SVC with RBF kernel {0:.2f}'.format(scores[2]), 'SVC with cubic kernel {0:.2f}'.format(scores[3]))
 
     # Set-up 2x2 grid for plotting.
     fig, sub = plt.subplots(2, 2)
