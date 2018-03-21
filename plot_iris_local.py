@@ -2,6 +2,7 @@ from os.path import isdir
 
 import matplotlib.pyplot as plt
 import numpy as np
+import pandas as pd
 from sklearn import svm, datasets
 
 
@@ -51,16 +52,33 @@ else:
 
 # import some data to play with
 iris = datasets.load_iris()
+print(iris.data.shape)
+print(iris.keys())
+print(iris.target.shape)
 # Take the first two features. We could avoid this by using a two-dim dataset
-y = iris.target
+y0 = iris.target
+
+g = pd.read_csv('./data/synthetic_iris_with_labels.csv')
+print(g.shape)
+print(g.columns)
+iris_values = g[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
+                 'petal width (cm)']].values.astype(np.float32).tolist()
+iris.data = np.array(iris_values)
+# iris.data = np.array(g[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)']].values.tolist())
+y_values = g[['target']].values.astype(int).reshape((1, 150))
+y = np.array(y_values)
+y = g[['target']].values.astype(int)
+# y = np.array(g[['target']].values).transpose()
 run_data = {
     'sepal': {
+        # 'data': iris.data[:, 0:2],
         'data': iris.data[:, 0:2],
         'x_label': 'Sepal length',
         'y_label': 'Sepal width',
         'output_file': 'iris_sepal_svc_plots_local.png'
     },
     'petal': {
+        # 'data': iris.data[:, 2:4],
         'data': iris.data[:, 2:4],
         'x_label': 'Petal length',
         'y_label': 'Petal width',
@@ -90,7 +108,9 @@ for feature in ['sepal', 'petal']:
     cmap = plt.get_cmap('coolwarm')
     for clf, title, ax in zip(models, titles, sub.flatten()):
         plot_contours(ax, clf, xx, yy, cmap=cmap, alpha=0.8)
-        ax.scatter(X0, X1, c=y, cmap=cmap, s=20, edgecolors='k')
+        ax.scatter(X0, X1,
+                   # c=y,
+                   cmap=cmap, s=20, edgecolors='k')
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
         ax.set_xlabel(run_data[feature]['x_label'])
