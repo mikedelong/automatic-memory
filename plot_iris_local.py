@@ -52,22 +52,22 @@ else:
 
 # import some data to play with
 iris = datasets.load_iris()
-# Take the first two features. We could avoid this by using a two-dim dataset
 
 g = pd.read_csv('./data/synthetic_iris_with_labels.csv')
 iris_values = g[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
                  'petal width (cm)']].values.astype(np.float32).tolist()
-iris.data = np.array(iris_values)
+data = np.array(iris_values)
 y = g[['target']].values.astype(int).ravel()
+
 run_data = {
     'sepal': {
-        'data': iris.data[:, 0:2],
+        'data': data[:, 0:2],
         'x_label': 'Sepal length',
         'y_label': 'Sepal width',
         'output_file': 'iris_sepal_svc_plots_local.png'
     },
     'petal': {
-        'data': iris.data[:, 2:4],
+        'data': data[:, 2:4],
         'x_label': 'Petal length',
         'y_label': 'Petal width',
         'output_file': 'iris_petal_svc_plots_local.png'
