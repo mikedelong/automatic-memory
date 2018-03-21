@@ -50,8 +50,6 @@ if not isdir(output_folder):
 else:
     print('output folder is %s' % output_folder)
 
-# import some data to play with
-iris = datasets.load_iris()
 
 g = pd.read_csv('./data/synthetic_iris_with_labels.csv')
 iris_values = g[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
@@ -59,23 +57,31 @@ iris_values = g[['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)',
 data = np.array(iris_values)
 y = g[['target']].values.astype(int).ravel()
 
+iris = datasets.load_iris()
+y_test = iris.target
+
+
+
 run_data = {
     'sepal': {
         'data': data[:, 0:2],
+        'test_data': iris.data[:, 0:2],
         'x_label': 'Sepal length',
         'y_label': 'Sepal width',
-        'output_file': 'iris_sepal_svc_plots_local.png'
+        'output_file': 'iris_sepal_svc_plots_cross.png'
     },
     'petal': {
         'data': data[:, 2:4],
+        'test_data': iris.data[:, 2:4],
         'x_label': 'Petal length',
         'y_label': 'Petal width',
-        'output_file': 'iris_petal_svc_plots_local.png'
+        'output_file': 'iris_petal_svc_plots_cross.png'
     }
 }
 random_state = 1
 for feature in ['sepal', 'petal']:
     X = run_data[feature]['data']
+    X_test = run_data[feature]['test_data']
     # we create an instance of SVM and fit out data. We do not scale our
     # data since we want to plot the support vectors
     C = 1.0  # SVM regularization parameter
@@ -85,7 +91,7 @@ for feature in ['sepal', 'petal']:
               svm.SVC(kernel='poly', degree=3, C=C, random_state=random_state)]
     fitted = [clf.fit(X, y) for clf in models]
 
-    scores = [clf.score(X, y) for clf in models]
+    scores = [clf.score(X_test, y_test) for clf in models]
 
     # title for the plots
     titles = ('SVC with linear kernel {0:.2f}'.format(scores[0]),
@@ -97,13 +103,14 @@ for feature in ['sepal', 'petal']:
     fig, sub = plt.subplots(2, 2)
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
-    X0, X1 = X[:, 0], X[:, 1]
+    # X0, X1 = X[:, 0], X[:, 1]
+    X0, X1 = X_test[:, 0], X_test[:, 1]
     xx, yy = make_meshgrid(X0, X1)
 
     cmap = plt.get_cmap('coolwarm')
     for clf, title, ax in zip(fitted, titles, sub.flatten()):
         plot_contours(ax, clf, xx, yy, cmap=cmap, alpha=0.8)
-        ax.scatter(X0, X1, c=y, cmap=cmap, s=20, edgecolors='k')
+        ax.scatter(X0, X1, c=y_test, cmap=cmap, s=20, edgecolors='k')
         ax.set_xlim(xx.min(), xx.max())
         ax.set_ylim(yy.min(), yy.max())
         ax.set_xlabel(run_data[feature]['x_label'])
