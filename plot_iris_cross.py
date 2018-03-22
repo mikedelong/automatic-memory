@@ -95,7 +95,7 @@ for feature in ['sepal', 'petal']:
               'SVC with RBF kernel {0:.2f}'.format(scores[2]), 'SVC with cubic kernel {0:.2f}'.format(scores[3]))
 
     # Set-up 2x2 grid for plotting.
-    fig, sub = plt.subplots(2, 2)
+    fig, sub = plt.subplots(2, 2, figsize=(8, 8))
     plt.subplots_adjust(wspace=0.4, hspace=0.4)
 
     X0, X1 = X_test[:, 0], X_test[:, 1]
