@@ -41,6 +41,8 @@ logger.debug(__doc__)
 
 # import some data to play with
 iris = datasets.load_iris()
+logger.debug(iris.DESCR)
+logger.debug(iris.data[0:5])
 X = iris.data[:, :2]  # we only take the first two features.
 y = iris.target
 
