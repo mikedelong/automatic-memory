@@ -3,6 +3,8 @@
 import logging
 import time
 
+import pandas as pd
+
 start_time = time.time()
 
 if __name__ == '__main__':
@@ -14,6 +16,11 @@ if __name__ == '__main__':
     logger.addHandler(console_handler)
     console_handler.setLevel(logging.DEBUG)
     logger.debug('started')
+
+    path = './data/adult.data'
+    logger.debug('full input file name: %s' % path)
+    data = pd.read_csv(path)
+    logger.debug('load complete; data is %d x %d' % data.shape)
 
     logger.debug('done')
     finish_time = time.time()
