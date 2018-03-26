@@ -6,40 +6,11 @@ import time
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn import metrics
+from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
-
-# >50K, <=50K
-
-# age: continuous
-
-# workclass: Private, Self-emp-not-inc, Self-emp-inc, Federal-gov, Local-gov, State-gov, Without-pay, Never-worked
-
-# fnlwgt: continuous
-
-# education: Bachelors, Some-college, 11th, HS-grad, Prof-school, Assoc-acdm, Assoc-voc, 9th, 7th-8th, 12th, Masters, 1st-4th, 10th, Doctorate, 5th-6th, Preschool
-
-# education-num: continuous
-
-# marital-status: Married-civ-spouse, Divorced, Never-married, Separated, Widowed, Married-spouse-absent, Married-AF-spouse
-
-# occupation: Tech-support, Craft-repair, Other-service, Sales, Exec-managerial, Prof-specialty, Handlers-cleaners, Machine-op-inspct, Adm-clerical, Farming-fishing, Transport-moving, Priv-house-serv, Protective-serv, Armed-Forces
-
-# relationship: Wife, Own-child, Husband, Not-in-family, Other-relative, Unmarried
-
-# race: White, Asian-Pac-Islander, Amer-Indian-Eskimo, Other, Black
-
-# sex: Female, Male
-
-# capital-gain: continuous
-
-# capital-loss: continuous
-
-# hours-per-week: continuous
-
-# native-country: United-States, Cambodia, England, Puerto-Rico, Canada, Germany, Outlying-US(Guam-USVI-etc), India, Japan, Greece, South, China, Cuba, Iran, Honduras, Philippines, Italy, Poland, Jamaica, Vietnam, Mexico, Portugal, Ireland, France, Dominican-Republic, Laos, Ecuador, Taiwan, Haiti, Columbia, Hungary, Guatemala, Nicaragua, Scotland, Thailand, Yugoslavia, El-Salvador, Trinadad&Tobago, Peru, Hong, Holand-Netherlands
-
 
 start_time = time.time()
 
@@ -120,6 +91,15 @@ if __name__ == '__main__':
     extra_trees_output_file = './output/extra_trees_feature_importances.png'
     logger.debug('writing extra trees classifier feature importances to %s' % extra_trees_output_file)
     plt.savefig(extra_trees_output_file)
+
+    for random_state in range(1, 20):
+        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state)
+        logistic_regression_model = LogisticRegression()
+        logistic_regression_model.fit(X_train, y_train)
+        y_predicted = logistic_regression_model.predict(X_test)
+        logger.debug('random state: %d logistic regression score: %.4f' % (
+        random_state, metrics.accuracy_score(y_test, y_predicted)))
+
 
     logger.debug('done')
     finish_time = time.time()
