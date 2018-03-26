@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn import metrics
+from sklearn.cross_validation import KFold, cross_val_score
 from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import RFE
@@ -92,14 +93,18 @@ if __name__ == '__main__':
     logger.debug('writing extra trees classifier feature importances to %s' % extra_trees_output_file)
     plt.savefig(extra_trees_output_file)
 
-    for random_state in range(1, 20):
-        X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state)
-        logistic_regression_model = LogisticRegression()
-        logistic_regression_model.fit(X_train, y_train)
-        y_predicted = logistic_regression_model.predict(X_test)
-        logger.debug('random state: %d logistic regression score: %.4f' % (
-        random_state, metrics.accuracy_score(y_test, y_predicted)))
+    random_state = 13
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=random_state)
+    logistic_regression_model = LogisticRegression()
+    logistic_regression_model.fit(X_train, y_train)
+    y_predicted = logistic_regression_model.predict(X_test)
+    logger.debug('random state: %d logistic regression score: %.4f' % (
+    random_state, metrics.accuracy_score(y_test, y_predicted)))
 
+    n_folds = 10
+    k_fold = KFold(len(data), n_folds=n_folds, shuffle=False)
+    logger.debug('K-fold cross-validation for %d folds: %.4f' % (
+    n_folds, cross_val_score(logistic_regression_model, X, y, cv=k_fold).mean()))
 
     logger.debug('done')
     finish_time = time.time()
