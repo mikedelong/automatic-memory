@@ -3,8 +3,10 @@
 import logging
 import time
 
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
 
@@ -87,15 +89,37 @@ if __name__ == '__main__':
     y = data.over50K
 
     # create a base classifier used to evaluate a subset of attributes
-    logreg = LogisticRegression()
+    logistic_regression_model = LogisticRegression()
 
     # create the RFE model and select 3 attributes
-    rfe = RFE(logreg, 3)
+    rfe = RFE(logistic_regression_model, 3)
     rfe = rfe.fit(X, y)
 
     # summarize the selection of the attributes
-    logger.debug(rfe.support_)
-    logger.debug(rfe.ranking_)
+    logger.debug('RFE model support: %s' % rfe.support_)
+    logger.debug('REF model ranking: %s' % rfe.ranking_)
+
+    # fit an Extra Trees model to the data
+    extra_trees = ExtraTreesClassifier()
+    extra_trees.fit(X, y)
+
+    # display the relative importance of each attribute
+    extra_trees_feature_importance = extra_trees.feature_importances_
+
+    # horizontal bar plot of feature importance
+    pos = np.arange(8) + 0.5
+    plt.barh(pos, extra_trees_feature_importance, align='center')
+    plt.title("Feature Importance")
+    plt.xlabel("Model Accuracy")
+    plt.ylabel("Features")
+    y_ticks = ('Working Class', 'Education', 'Marital Status', 'Race', 'Sex', 'Relationship Status', 'Capital Gain',
+               'Capital Loss')
+    plt.yticks(pos, y_ticks)
+    plt.grid(True)
+    plt.tight_layout()
+    extra_trees_output_file = './output/extra_trees_feature_importances.png'
+    logger.debug('writing extra trees classifier feature importances to %s' % extra_trees_output_file)
+    plt.savefig(extra_trees_output_file)
 
     logger.debug('done')
     finish_time = time.time()
