@@ -80,6 +80,10 @@ if __name__ == '__main__':
         {'Not-in-family': 0, 'Unmarried': 0, 'Own-child': 0, 'Other-relative': 0, 'Husband': 1, 'Wife': 1})
     logger.debug('after cleanup data head looks like this: \n%s' % data.head())
 
+    X = data[['workclass_num', 'education-num', 'marital_num', 'race_num', 'sex_num', 'rel_num', 'capital-gain',
+              'capital-loss']]
+    y = data.over50K
+
     logger.debug('done')
     finish_time = time.time()
     elapsed_hours, elapsed_remainder = divmod(finish_time - start_time, 3600)
