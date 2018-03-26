@@ -5,6 +5,8 @@ import time
 
 import numpy as np
 import pandas as pd
+from sklearn.feature_selection import RFE
+from sklearn.linear_model import LogisticRegression
 
 # >50K, <=50K
 
@@ -83,6 +85,17 @@ if __name__ == '__main__':
     X = data[['workclass_num', 'education-num', 'marital_num', 'race_num', 'sex_num', 'rel_num', 'capital-gain',
               'capital-loss']]
     y = data.over50K
+
+    # create a base classifier used to evaluate a subset of attributes
+    logreg = LogisticRegression()
+
+    # create the RFE model and select 3 attributes
+    rfe = RFE(logreg, 3)
+    rfe = rfe.fit(X, y)
+
+    # summarize the selection of the attributes
+    logger.debug(rfe.support_)
+    logger.debug(rfe.ranking_)
 
     logger.debug('done')
     finish_time = time.time()
