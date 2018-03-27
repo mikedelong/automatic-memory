@@ -7,11 +7,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from sklearn import metrics
-from sklearn.cross_validation import KFold, cross_val_score
-from sklearn.cross_validation import train_test_split
 from sklearn.ensemble import ExtraTreesClassifier
 from sklearn.feature_selection import RFE
 from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import KFold
+from sklearn.model_selection import cross_val_score
+from sklearn.model_selection import train_test_split
 
 start_time = time.time()
 
@@ -101,10 +102,10 @@ if __name__ == '__main__':
     logger.debug('random state: %d logistic regression score: %.4f' % (
     random_state, metrics.accuracy_score(y_test, y_predicted)))
 
-    n_folds = 10
-    k_fold = KFold(len(data), n_folds=n_folds, shuffle=False)
+    n_splits = 10
+    k_fold = KFold(n_splits=n_splits, shuffle=False, random_state=random_state)
     logger.debug('K-fold cross-validation for %d folds: %.4f' % (
-    n_folds, cross_val_score(logistic_regression_model, X, y, cv=k_fold).mean()))
+        n_splits, cross_val_score(logistic_regression_model, X, y, cv=k_fold).mean()))
 
     logger.debug('done')
     finish_time = time.time()
