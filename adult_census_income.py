@@ -101,23 +101,28 @@ if __name__ == '__main__':
     logistic_regression_model.fit(X_train, y_train)
     y_predicted = logistic_regression_model.predict(X_test)
     logger.debug('random state: %d logistic regression score: %.4f' % (
-    random_state, metrics.accuracy_score(y_test, y_predicted)))
+        random_state, metrics.accuracy_score(y_test, y_predicted)))
 
     n_splits = 10
     k_fold = KFold(n_splits=n_splits, shuffle=False, random_state=random_state)
     logger.debug('K-fold cross-validation for %d folds: %.4f' % (
         n_splits, cross_val_score(logistic_regression_model, X, y, cv=k_fold).mean()))
 
-    k_range_max = 26
+    k_range_max = 25
     k_range = np.arange(1, k_range_max)
     scores = []
     for k in k_range:
+        t_before = time.time()
         knn = KNeighborsClassifier(n_neighbors=k)
         knn.fit(X_train, y_train)
         y_predicted = knn.predict(X_test)
-        scores.append(metrics.accuracy_score(y_test, y_predicted))
-    logger.debug(
-        'the best score of %d is number %d and it is %.4f' % (k_range_max, scores.index(max(scores)), max(scores)))
+        score = metrics.accuracy_score(y_test, y_predicted)
+        t_after = time.time()
+        scores.append(score)
+        logger.debug('k-nearest neighbors: iteration %d has score %.4f and took %.2f seconds' %
+                     (k, score, t_after - t_before))
+    logger.debug('the best score of %d is number %d and it is %.4f' %
+                 (k_range_max, scores.index(max(scores)), max(scores)))
 
     logger.debug('done')
     finish_time = time.time()
