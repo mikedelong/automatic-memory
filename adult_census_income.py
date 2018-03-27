@@ -13,6 +13,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
 
 start_time = time.time()
 
@@ -106,6 +107,17 @@ if __name__ == '__main__':
     k_fold = KFold(n_splits=n_splits, shuffle=False, random_state=random_state)
     logger.debug('K-fold cross-validation for %d folds: %.4f' % (
         n_splits, cross_val_score(logistic_regression_model, X, y, cv=k_fold).mean()))
+
+    k_range_max = 26
+    k_range = np.arange(1, k_range_max)
+    scores = []
+    for k in k_range:
+        knn = KNeighborsClassifier(n_neighbors=k)
+        knn.fit(X_train, y_train)
+        y_predicted = knn.predict(X_test)
+        scores.append(metrics.accuracy_score(y_test, y_predicted))
+    logger.debug(
+        'the best score of %d is number %d and it is %.4f' % (k_range_max, scores.index(max(scores)), max(scores)))
 
     logger.debug('done')
     finish_time = time.time()
